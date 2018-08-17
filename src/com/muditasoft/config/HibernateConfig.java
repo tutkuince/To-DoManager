@@ -23,7 +23,7 @@ public class HibernateConfig {
 	// Set up a Logger for diagnostics
 	private Logger logger = Logger.getLogger(getClass().getName()); 
 
-	@Bean
+	@Bean(destroyMethod = "close")
 	public ComboPooledDataSource comboPooledDataSource() {
 		// Create Connection Pool
 		ComboPooledDataSource dataSource = new ComboPooledDataSource();
