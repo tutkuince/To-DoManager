@@ -1,6 +1,7 @@
 package com.muditasoft.config;
 
 import java.beans.PropertyVetoException;
+import java.util.logging.Logger;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -18,27 +19,48 @@ public class HibernateConfig {
 
 	@Autowired
 	private Environment environment;
+	
+	// Set up a Logger for diagnostics
+	private Logger logger = Logger.getLogger(getClass().getName()); 
 
 	@Bean
 	public ComboPooledDataSource comboPooledDataSource() {
 		// Create Connection Pool
 		ComboPooledDataSource dataSource = new ComboPooledDataSource();
-
+		
+		// Get JDBC Properties
+		String url = environment.getProperty("jdbc.url");
+		String user = environment.getProperty("jdbc.user");
+		String password = environment.getProperty("jdbc.password");
+		String driver = environment.getProperty("jdbc.driver");
+		
+		// Get Connection Pool Properties
+		int initPoolSize = getIntProperty("connection.pool.initialPoolSize");
+		int minPoolSize = getIntProperty("connection.pool.minPoolSize");
+		int maxPoolSize = getIntProperty("connection.pool.maxPoolSize");
+		int maxIdleTime = getIntProperty("connection.pool.maxIdleTime");
+		
 		// Set JDBC properties to ComboPooledDataSource
-		dataSource.setJdbcUrl(environment.getProperty("jdbc.url"));
-		dataSource.setUser(environment.getProperty("jdbc.user"));
-		dataSource.setPassword(environment.getProperty("jdbc.password"));
+		dataSource.setJdbcUrl(url);
+		dataSource.setUser(user);
+		dataSource.setPassword(password);
 		try {
-			dataSource.setDriverClass(environment.getProperty("jdbc.driver"));
+			dataSource.setDriverClass(driver);
 		} catch (PropertyVetoException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		dataSource.setInitialPoolSize(getIntProperty("connection.pool.initialPoolSize"));
-		dataSource.setMinPoolSize(getIntProperty("connection.pool.minPoolSize"));
-		dataSource.setMaxPoolSize(getIntProperty("connection.pool.maxPoolSize"));
-		dataSource.setMaxIdleTime(getIntProperty("connection.pool.maxIdleTime"));
+		
+		// Set Connection Pool Properties to ComboPooledDataSource
+		dataSource.setInitialPoolSize(initPoolSize);
+		dataSource.setMinPoolSize(minPoolSize);
+		dataSource.setMaxPoolSize(maxPoolSize);
+		dataSource.setMaxIdleTime(maxIdleTime);
 
+		// Log to Connection Properties
+		logger.info("===>>> jdbc.url = " + url);
+		logger.info("===>>> jdbc.user = " + user);
+		
 		return dataSource;
 	}
 
