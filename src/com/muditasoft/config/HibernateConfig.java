@@ -11,14 +11,16 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.orm.hibernate5.HibernateTransactionManager;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
+import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.transaction.annotation.TransactionManagementConfigurer;
 
 import com.mchange.v2.c3p0.ComboPooledDataSource;
 
 @Configuration
 @EnableTransactionManagement
 @PropertySource("classpath:/com/muditasoft/properties/persistence-mysql.properties")
-public class HibernateConfig {
+public class HibernateConfig implements TransactionManagementConfigurer {
 
 	@Autowired
 	private Environment environment;
@@ -99,5 +101,10 @@ public class HibernateConfig {
 
 		return intValue;
 
+	}
+
+	@Override
+	public PlatformTransactionManager annotationDrivenTransactionManager() {
+		return hibernateTransactionManager();
 	}
 }
