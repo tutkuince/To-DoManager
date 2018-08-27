@@ -7,6 +7,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+import org.hibernate.annotations.Type;
+
 @Entity
 public class Todo {
 
@@ -17,6 +19,8 @@ public class Todo {
 	private String user;
 	private String desc;
 	private Date targetDate;
+	
+	@Type(type = "org.hibernate.type.NumericBooleanType")
 	private boolean isDone;
 
 	public Todo() {
