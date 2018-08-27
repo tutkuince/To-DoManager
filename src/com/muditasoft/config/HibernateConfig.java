@@ -78,6 +78,7 @@ public class HibernateConfig implements TransactionManagementConfigurer {
 		Properties properties = new Properties();
 		properties.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQL8Dialect");
 		properties.setProperty("hibernate.show_sql", "true");
+		properties.setProperty("hibernate.hbm2ddl.auto", "update");
 
 		bean.setHibernateProperties(properties);
 
